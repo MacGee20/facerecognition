@@ -21,10 +21,7 @@ const particlesOptions = {
               }
             }
               }
-            }
-        
-      
-
+            }        
 class App extends Component {
   constructor() {
     super();
@@ -32,22 +29,59 @@ class App extends Component {
       input: '',
       imageUrl: '',
 
-      //UI modification
+      //UX modification
       route: 'signin',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     } 
+  }
+
+  loadUser = (data) => {
+    this.setState ({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      entries: data.entries,
+      joined: data.joined
+    }})
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:3000/')
+    .then(response => response.json())
+    .then(console.log)
   }
 
   onInputChange = (event) => {
     this.setState({input: event.target.value});
   }
 
-  onButtonSubmit = () => {
+ /*//Image detection:
+    onButtonSubmit = () => {
     this.setState({imageUrl: this.setState.input});
-   // api for face detection
+    .then(response => {
+      if (response) {
+        fetch('http://localhost:3000/image', {
+          method: 'put', 
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+              id: this.state.user.id
+        })
+      } .then(response => response.json())
+      .then(count => {
+        this.setState(object.assign( this.state.user, { entries: count }))
+      })
+    }
+       // api for face detection
    //app.models.predict("5270f7d22d414009bf014162b8f906f3", "")
-
-  }
+*/
 
   onRouteChange =(route) => {
     if (route === 'signout') {
@@ -74,13 +108,13 @@ render () {
                   <Rank />
                   <ImageLinkForm 
                       onInputChange = {this.onInputChange}
-                      onButtonSubmit = {this.onButtonSubmit} />
+                     onButtonSubmit = {this.onButtonSubmit} />
                   <FaceRecognition imageUrl= {imageUrl} />
               </div>
               :   (
                 route === 'signin'
                 ? <SignIn onRouteChange= {this.onRouteChange}/>
-                : <Register onRouteChange= {this.onRouteChange}/>
+                : <Register loadUser= { this.loadUser} onRouteChange= {this.onRouteChange}/>
               )   
             }
         </div>
