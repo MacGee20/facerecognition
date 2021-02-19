@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 
 class Signin extends React.Component {
 
@@ -28,8 +28,8 @@ class Signin extends React.Component {
             })
         }) 
         .then (response => response.json())
-        .then (data => {
-            if (data === 'success') {
+        .then (user => {
+            if (user.id) {
             this.props.onRouteChange('home');   
             } 
         })
